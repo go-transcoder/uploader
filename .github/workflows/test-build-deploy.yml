@@ -2,6 +2,7 @@
 name: test-build-deploy
 run-name: Build transcode project into a docker image
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
