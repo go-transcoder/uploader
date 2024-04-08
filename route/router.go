@@ -8,7 +8,8 @@ import (
 func GetRouter() *mux.Router {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", controllers.Index).Methods("GET")
+	r.HandleFunc("/", controllers.GetVideos).Methods("GET")
+	r.HandleFunc("/upload", controllers.Index).Methods("GET")
 	r.HandleFunc("/upload", controllers.Post).Methods("POST")
 
 	return r

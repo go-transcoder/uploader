@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"io"
 	"mime/multipart"
 	"os"
-	"strconv"
 )
 
 type S3 struct {
@@ -21,7 +19,6 @@ func (s3Api *S3) UploadMultipart(file multipart.File, path string, fileName stri
 	defer file.Close()
 
 	// first videos to tmp
-	fileName = strconv.FormatInt(timestamppb.Now().Seconds, 10) + "_" + fileName
 	tmpFile, err := os.CreateTemp("", fileName)
 
 	if err != nil {

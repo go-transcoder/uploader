@@ -9,6 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.49.0
 	github.com/gofor-little/env v1.0.16
 	github.com/gorilla/mux v1.8.1
+	github.com/lib/pq v1.10.9
 	google.golang.org/protobuf v1.32.0
 )
 

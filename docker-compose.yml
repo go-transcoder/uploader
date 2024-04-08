@@ -1,0 +1,32 @@
+version: '3.0'
+
+services:
+  app:
+    container_name: 'uploader-app'
+    build:
+      context: ./
+      dockerfile: ./docker/local/Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - type: bind
+        source: ./
+        target: /app/
+      - type: bind
+        source: ~/.aws
+        target: /root/.aws
+    environment:
+      - PORT=4000
+      - DBUSER=postgres
+      - DBPASS=password
+      - DBHOST=db
+      - DBPORT=5432
+      - DBNAME=test
+      - SSLMODE=disable
+      - INPUT_S3_BUCKET=abboud131231231231namir-my-transcoding-dev-bucket
+    networks:
+      - transcoding-app
+
+networks:
+  transcoding-app:
+    external: true

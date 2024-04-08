@@ -11,6 +11,11 @@ import (
 	"os"
 )
 
+func GetVideos(w http.ResponseWriter, r *http.Request) {
+	videos := services.GetVideos()
+	fmt.Fprintf(w, "videos: %v", videos)
+}
+
 func Index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./videos/templates/upload.html")
 }
@@ -32,16 +37,17 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		S3Client:   s3.NewFromConfig(cfg),
 		BucketName: os.Getenv("INPUT_S3_BUCKET"),
 	}
+
 	go func() {
 		fileName, err := services.Upload(&s3Storage, file, "uploads", fileHeader.Filename)
 
 		if err != nil {
 			fmt.Printf("error uploading to s3: %v", err)
+			return
 		}
 
 		fmt.Printf("File %v has been successfully uploaded to bucket\n", fileName)
 	}()
 
-	fmt.Fprintf(w, "File successfully pushed to bucket.")
-
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
