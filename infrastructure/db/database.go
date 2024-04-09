@@ -44,7 +44,7 @@ func GetInstance() *Database {
 }
 
 func (_db Database) getConnection() (*sql.DB, error) {
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s", _db.User, _db.Password, _db.Host, _db.Port, _db.Name, _db.SSLMode)
+	connStr := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=%s", _db.User, _db.Password, _db.Host, _db.Port, _db.Name, _db.SSLMode)
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
