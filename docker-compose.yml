@@ -17,8 +17,8 @@ services:
         target: /root/.aws
     environment:
       - PORT=4000
-      - DBUSER=postgres
-      - DBPASS=password
+      - DBUSER=root
+      - DBPASS=hA90fwR8UL.5?kInMZw:kdHU7~}]
       - DBHOST=db
       - DBPORT=5432
       - DBNAME=test
