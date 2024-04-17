@@ -61,7 +61,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
         with:
           role-to-assume: ${{ secrets.roleArn }}
-          aws-region: $REGISTRY_REGION
+          aws-region: ${{ env.REGISTRY_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -72,10 +72,11 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
+          REPOSITORY: ${{ env.SERVICE_REPOSITORY_NAME }}
         run: |
-          docker build -f docker/Dockerfile -t $REGISTRY/$SERVICE_REPOSITORY_NAME:$IMAGE_TAG .
-          docker push $REGISTRY/$SERVICE_REPOSITORY_NAME:$IMAGE_TAG
-          echo "::set-output name=image::$REGISTRY/$SERVICE_REPOSITORY_NAME:$IMAGE_TAG"
+          docker build -f docker/Dockerfile -t $REGISTRY/REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
   deploy:
     needs: [ build ]
@@ -88,7 +89,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
         with:
           role-to-assume: ${{ secrets.roleArn }}
-          aws-region: $SERVICE_REGION
+          aws-region: ${{ env.SERVICE_REGION }}
 
       - name: Download task definition
         run: |
@@ -99,7 +100,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: $SERVICE_CONTAINER_NAME
+          container-name: ${{ env.SERVICE_CONTAINER_NAME }}
           image: ${{ needs.build.outputs.image }}
           environment-variables: |
             DBPASS=${{ secrets.dbPass }}
@@ -108,6 +109,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: $ECS_SERVICE_NAME
-          cluster: $ECS_CLUSTER_NAME
+          service: ${{ env.ECS_SERVICE_NAME }}
+          cluster: ${{ env.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
