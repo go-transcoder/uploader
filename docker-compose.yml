@@ -1,31 +1,30 @@
 version: '3.0'
 
 services:
-  app:
-    container_name: 'uploader-app'
-    build:
-      context: ./
-      dockerfile: ./docker/local/Dockerfile
-    ports:
-      - "4000:4000"
-    volumes:
-      - type: bind
-        source: ./
-        target: /app/
-      - type: bind
-        source: ~/.aws
-        target: /root/.aws
+  db:
+    container_name: 'ours-main-db'
+    image: postgres
     environment:
-      - PORT=4000
-      - DBUSER=root
-      - DBPASS=hA90fwR8UL.5?kInMZw:kdHU7~}]
-      - DBHOST=db
-      - DBPORT=5432
-      - DBNAME=test
-      - SSLMODE=disable
-      - INPUT_S3_BUCKET=abboud131231231231namir-my-transcoding-dev-bucket
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: root
+      POSTGRES_DB: test
+    ports:
+      - "5434:5432"
     networks:
-      - transcoding-app
+      transcoding-app:
+        aliases:
+          - db
+
+  migrate:
+    container_name: 'ours-main-migrate'
+    image: migrate/migrate
+    command: ["-path=/migrations/", "-database", "postgres://root:test@db:5432/test?sslmode=disable", "up"]
+    depends_on:
+      - db
+    volumes:
+      - ./migrations:/migrations
+    networks:
+      transcoding-app:
 
 networks:
   transcoding-app:

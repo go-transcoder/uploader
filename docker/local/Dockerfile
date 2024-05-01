@@ -1,3 +1,8 @@
+
+# stage 2 migrations
+FROM migrate/migrate as migrate
+
+
 FROM golang:1.21.5-alpine as builder
 
 ENV PORT="4000"
@@ -17,9 +22,15 @@ COPY . .
 RUN export GOPATH="$HOME/go"
 RUN export PATH="$GOPATH/bin:$PATH"
 
+# copy migrations and migrate
+COPY --from=migrate /migrate /usr/local/bin/migrate
+COPY ./migrations /migrations
+COPY ./docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # install the gow package to watch changes and rerun
 RUN go install github.com/mitranim/gow@latest
 
-ENTRYPOINT ["gow"]
+ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["run", "."]
+CMD ["gow", "run", "."]
