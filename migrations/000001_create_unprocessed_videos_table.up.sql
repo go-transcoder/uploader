@@ -1,0 +1,8 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE TABLE unprocessed_videos (
+   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+   name VARCHAR(100),
+   path VARCHAR(200),
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
