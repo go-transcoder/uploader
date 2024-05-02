@@ -11,11 +11,10 @@ type EventConsumerService struct {
 	reader  *kafka.Reader
 }
 
-func NewEventConsumerService(address string, destination string) *EventConsumerService {
+func NewEventConsumerService(address []string, destination string) *EventConsumerService {
 	consumerService := &EventConsumerService{
-		address: address,
 		reader: kafka.NewReader(kafka.ReaderConfig{
-			Brokers:  []string{address},
+			Brokers:  address,
 			GroupID:  "1231231231jnaja@consumer_group_test",
 			Topic:    destination,
 			MaxBytes: 10e6, // 10MB
