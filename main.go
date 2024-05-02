@@ -15,6 +15,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 )
@@ -53,7 +54,7 @@ func main() {
 	KAFKATOPIC := os.Getenv("KAFKATOPIC")
 
 	// Create the events consumer here and pass them as an slice to the eventListener func
-	videoTranscodedEventConsumer := kafka.NewEventConsumerService(KAFKAHOST, KAFKATOPIC)
+	videoTranscodedEventConsumer := kafka.NewEventConsumerService(strings.Split(KAFKAHOST, ","), KAFKATOPIC)
 	videoTranscodedEventHandler := events2.NewVideoTranscodedEventHandler(videoTranscodedEventConsumer, unitOfWork.GetVideosRepo())
 
 	eventHandlers := []interfaces.EventHandlers{
