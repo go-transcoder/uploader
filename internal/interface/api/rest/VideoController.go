@@ -18,8 +18,13 @@ func NewVideoController(e *echo.Echo, service interfaces.VideoService) *VideoCon
 	}
 
 	e.POST("/upload", controller.Upload)
+	e.GET("/", controller.Index)
 
 	return controller
+}
+
+func (uc *VideoController) Index(c echo.Context) error {
+	return c.JSON(http.StatusOK, "Hello")
 }
 
 func (uc *VideoController) Upload(c echo.Context) error {
