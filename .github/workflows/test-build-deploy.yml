@@ -102,8 +102,6 @@ jobs:
           task-definition: task-definition.json
           container-name: ${{ env.SERVICE_CONTAINER_NAME }}
           image: ${{ needs.build.outputs.image }}
-          environment-variables: |
-            DBPASS=${{ secrets.dbPass }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
