@@ -77,7 +77,6 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
-
   deploy:
     needs:
       - build
@@ -94,7 +93,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.PAT }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/$repo_name/actions/workflows/triggered.yml/dispatches" \
-            -d '{"ref":"main","inputs":{"tags":"publisher"}}'          
+            -d '{"ref":"main","inputs":{"tags":"publisher", "publisher_image": "${{ needs.build.outputs.image }}"}}'          
 
 #  deploy:
 #    needs: [ build ]
